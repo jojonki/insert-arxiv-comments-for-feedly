@@ -24,7 +24,7 @@ function retrieveCommentFromArxiv(arxiv_url) {
         // url: 'https://arxiv.org/abs/1912.08981',
         url: arxiv_url,
         success: function (data) {
-            $dom = $($.parseHTML(data));
+            let $dom = $($.parseHTML(data));
             let comment = $dom.find('div.metatable').find('.comments').text();
             if (comment === null || comment === '') {
                 comment = 'No comments';
@@ -38,12 +38,13 @@ function modifyDOM() {
     return document.body.innerHTML;
 }
 document.addEventListener('DOMContentLoaded', () => {
-    getCurrentTabUrl((url) => {
+    // getCurrentTabUrl((url) => {
         chrome.tabs.executeScript({
             code: '(' + modifyDOM + ')();' //argument here is a string but function.toString() returns function's code
         }, (results) => {
+            alert(results);
             var $dom = $($.parseHTML(results[0]));
-            paper_url = $dom.find('div.entryHeader a').attr('href');
+            let paper_url = $dom.find('div.entryHeader a').attr('href');
             retrieveCommentFromArxiv(paper_url);
 
             // hide popup automatically
@@ -51,5 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
             //   window.close();
             // }, 3000);
         });
-    });
+    // });
 });
+
