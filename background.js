@@ -1,6 +1,6 @@
 'use strict';
 
-function retrieveCommentFromArxiv(arxiv_url) {
+function retrieveCommentFromArxiv(arxiv_url, tab) {
     $.ajax({     
         type: "GET",
         url: arxiv_url,
@@ -16,16 +16,20 @@ function retrieveCommentFromArxiv(arxiv_url) {
                 title: "Author Comments",
                 message: "\"" + comment + "\"",
             }
+            chrome.tabs.sendMessage(tab.id, {
+                command: "notify_comment",
+                comment: comment
+            });
             console.log("call notifications");
             chrome.notifications.create('copy_with_text_notification', options);
             // document.getElementById('msg').innerHTML = comment;
         }
     });
 }
+
 function modifyDOM() {
     return document.body.innerHTML;
 }
-
 
 chrome.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
@@ -39,37 +43,17 @@ chrome.tabs.onUpdated.addListener(
                 }, (results) => {
                     let $dom = $($.parseHTML(results[0]));
                     let paper_url = $dom.find('div.entryHeader a').attr('href');
-                    retrieveCommentFromArxiv(paper_url);
-
+                    // $dom.find('div.fx.metadata').append('<p>#############</p>');
+                    // alert(paper_url);
+                    // alert("--####" + $dom.find('div.entryHeader'));
+                      // chrome.tabs.sendMessage(tab.id, {
+                      //     command: "change_title",
+                      //     title: "hoge"
+                      // });
+                    console.log($dom.find('div.entryHeader'));
+                    retrieveCommentFromArxiv(paper_url, tab);
                 });
             }
         }
     }
 );
-
-// chrome.commands.onCommand.addListener(function(command) {
-//     console.log("onCommand:", command);
-//     let copy_mode = null;
-//     if (command === "copy-text-with-url-as-plain") {
-//         copy_mode = "plain"
-//     } else if (command === "copy-text-with-url-as-markdown") {
-//         copy_mode = "markdown"
-//     } else {
-//         alert("Unknown command: " + command);
-//     }
-//
-//     console.log("copy mode", copy_mode);
-//     if (copy_mode !== undefined) {
-//         console.log("call tabs.query to activeTab");
-//         chrome.tabs.query({
-//             active: true,
-//             lastFocusedWindow: true
-//         }, function(tabs) {
-//             console.log("call copyTextWithURL");
-//             copyTextWithURL(tabs[0], copy_mode);
-//         });
-//     }
-// });
-//
-// // chrome.browserAction.onClicked.addListener(copyTextWithURL);
-// chrome.browserAction.onClicked.addListener(pop);
