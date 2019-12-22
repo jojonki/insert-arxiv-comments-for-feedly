@@ -4,17 +4,15 @@
     "description": "Insert a paper comment into feedly arXiv pages",
     "permissions": [
         "activeTab", 
-		"https://arxiv.org/",
-        "<all_urls>",
-        "tabs",
-		"https://feedly.com/"
+		"*://*.arxiv.org/*",
+		"https://feedly.com/*"
     ],
     "background": {
         "scripts": ["jquery-3.4.1.min.js", "background.js"],
         "persistent": false
     },
     "content_scripts": [{
-        "matches": ["<all_urls>"],
+        "matches": ["https://feedly.com/*"],
         "js": ["content.js"]
     }],
     "icons": {
