@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 function retrieveCommentFromArxiv(arxiv_url, tab) {
     $.ajax({     
@@ -6,9 +6,9 @@ function retrieveCommentFromArxiv(arxiv_url, tab) {
         url: arxiv_url,
         success: function (data) {
             let $dom = $($.parseHTML(data));
-            let comment = $dom.find('div.metatable').find('.comments').text();
-            if (comment === null || comment === '') {
-                comment = 'No comments';
+            let comment = $dom.find("div.metatable").find(".comments").text();
+            if (comment === null || comment === "") {
+                comment = "No comments";
             }
             chrome.tabs.sendMessage(tab.id, {
                 command: "notify_comment",
@@ -25,14 +25,19 @@ function modifyDOM() {
 // Listen events for url changes
 chrome.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
-        if ('url' in changeInfo) {
-            if (changeInfo.url.startsWith('https://feedly.com/i/entry')) {
+        if ("url" in changeInfo) {
+            if (changeInfo.url.startsWith("https://feedly.com/i/entry")) {
                 chrome.tabs.executeScript({
-                    code: '(' + modifyDOM + ')();'
+                    code: "(" + modifyDOM + ")();"
                 }, (results) => {
                     let $dom = $($.parseHTML(results[0]));
-                    let paper_url = $dom.find('div.entryHeader a').attr('href');
-                    retrieveCommentFromArxiv(paper_url, tab);
+                    let $entry_header = $dom.find("div.entryHeader a");
+                    if ($entry_header !== null) {
+                        let paper_url = $entry_header.attr("href");
+                        if (paper_url.startsWith("http://arxiv.org")) {
+                            retrieveCommentFromArxiv(paper_url, tab);
+                        }
+                    }
                 });
             }
         }
