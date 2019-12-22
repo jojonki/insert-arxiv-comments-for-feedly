@@ -1,7 +1,7 @@
 {
-    "name": "POP!",
+    "name": "Insert arXiv commments for feedly",
     "version": "0.1",
-    "description": "Copy current selected text and current URL",
+    "description": "Insert a paper comment into feedly arXiv pages",
     "permissions": [
         "activeTab", 
 		"https://arxiv.org/",
