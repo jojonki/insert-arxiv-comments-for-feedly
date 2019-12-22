@@ -16,6 +16,10 @@
         "js": ["content.js"]
     }],
     "icons": {
+        "16": "images/icon_128.png",
+        "32": "images/icon_128.png",
+        "48": "images/icon_128.png",
+        "128": "images/icon_128.png"
     },
     "manifest_version": 2
 }
