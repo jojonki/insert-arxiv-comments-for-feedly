@@ -1,15 +1,17 @@
 {
-    "name": "Insert arXiv commments for feedly",
-    "version": "0.1",
+    "name": "Insert arXiv comments for feedly",
+    "version": "1.0",
     "description": "Insert a paper comment into feedly arXiv pages",
     "permissions": [
-        "activeTab", 
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
 		"*://*.arxiv.org/*",
 		"https://feedly.com/*"
     ],
     "background": {
-        "scripts": ["jquery-3.4.1.min.js", "background.js"],
-        "persistent": false
+        "service_worker": "background.js"
     },
     "content_scripts": [{
         "matches": ["https://feedly.com/*"],
@@ -21,5 +23,5 @@
         "48": "images/icon_128.png",
         "128": "images/icon_128.png"
     },
-    "manifest_version": 2
+    "manifest_version": 3
 }
